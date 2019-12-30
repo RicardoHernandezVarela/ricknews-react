@@ -6,9 +6,9 @@ const Articles = (props) => {
     let articlesList = [];
 
     if(allArticles.length > 0) {
-        articlesList = allArticles.map( article => {
+        articlesList = allArticles.map( (article, index) => {
             return (
-                <div className="article" key={article.publishedAt}>
+                <div className="article" key={index}>
                     <a href={article.url}>
                         <h2>{article.title}</h2>
                         <h6>{article.publishedAt}</h6>

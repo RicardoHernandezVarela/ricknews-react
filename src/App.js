@@ -13,7 +13,7 @@ class App extends Component {
 
   state = {
     sources: [],
-    newsSource: 'techcrunch',
+    newsSource: 'bbc-sport',
     articles: []
   }
 
@@ -32,8 +32,12 @@ class App extends Component {
   handleArticles = async (source = this.state.newsSource) => {
     const res = await fetch(`https://newsapi.org/v1/articles?source=${source}&apiKey=${apiKey}`)
     const json = await res.json();
-
     this.setState({articles: json.articles});
+  }
+
+  handleSourceChange = (event) => {
+    let selectedSource = event.target.value;
+    this.setState({newsSource: selectedSource}, () => this.handleArticles(this.state.newsSource));
   }
 
   render() {
@@ -44,7 +48,11 @@ class App extends Component {
         </div>
 
         <div className="main">
-          <SourceSelector sources={this.state.sources} />
+          <SourceSelector
+            newsSource={this.state.newsSource}
+            sources={this.state.sources} 
+            handleSourceChange={this.handleSourceChange}
+          />
           <Articles articles={this.state.articles}/>
         </div>
     </div>
