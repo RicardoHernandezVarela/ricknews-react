@@ -7,11 +7,13 @@ import apiKey from './apikey/key'
 /* Import components */
 import SourceSelector from './Components/SourceSelector';
 import Articles from './Components/Articles';
+import Loader from './Components/Loader'
 
 
 class App extends Component {
 
   state = {
+    loading: true,
     sources: [],
     newsSource: 'bbc-sport',
     articles: []
@@ -32,15 +34,17 @@ class App extends Component {
   handleArticles = async (source = this.state.newsSource) => {
     const res = await fetch(`https://newsapi.org/v1/articles?source=${source}&apiKey=${apiKey}`)
     const json = await res.json();
-    this.setState({articles: json.articles});
+
+    this.setState({articles: json.articles, loading: false});
   }
 
   handleSourceChange = (event) => {
     let selectedSource = event.target.value;
-    this.setState({newsSource: selectedSource}, () => this.handleArticles(this.state.newsSource));
+    this.setState({newsSource: selectedSource, loading: true}, () => this.handleArticles(this.state.newsSource));
   }
 
   render() {
+
     return (
       <div className="container">
         <div className="header">
@@ -53,10 +57,12 @@ class App extends Component {
             sources={this.state.sources} 
             handleSourceChange={this.handleSourceChange}
           />
+          {this.state.loading && <Loader />}
           <Articles articles={this.state.articles}/>
         </div>
-    </div>
-    )
+      </div>
+    );
+
   }
 }
 
